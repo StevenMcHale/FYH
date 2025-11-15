@@ -4,6 +4,8 @@
 
 
 
+
+
 <html>
 <head>
 <style>
@@ -41,6 +43,12 @@
     font-size: 14px;
     box-sizing: border-box;
   }
+
+  #save-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
 </style>
 </head>
 <body>
@@ -72,9 +80,6 @@
   <div class="day-label">Friday</div>
   <div class="day-label">Saturday</div>
   <div class="day-label">Sunday</div>
-
-  <!-- A reusable input box -->
-  <!-- Use: <input list="meal-options" /> -->
 
   <!-- Breakfast row -->
   <div class="meal-label">Breakfast</div>
@@ -108,9 +113,69 @@
 
 </div>
 
+<!-- SAVE BUTTON -->
+<button id="save-button">Save Meals</button>
+
+<!-- JAVASCRIPT BELOW -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const inputs = document.querySelectorAll("input[list='meal-options']");
+    const datalist = document.getElementById("meal-options");
+
+    // Load saved inputs
+    if (localStorage.getItem("mealGrid")) {
+        const savedMeals = JSON.parse(localStorage.getItem("mealGrid"));
+        inputs.forEach((input, index) => {
+            if (savedMeals[index]) {
+                input.value = savedMeals[index];
+            }
+        });
+    }
+
+    // Load saved meal options
+    if (localStorage.getItem("mealOptions")) {
+        const savedOptions = JSON.parse(localStorage.getItem("mealOptions"));
+        savedOptions.forEach(meal => {
+            if (!Array.from(datalist.options).some(opt => opt.value === meal)) {
+                let option = document.createElement("option");
+                option.value = meal;
+                datalist.appendChild(option);
+            }
+        });
+    }
+
+    // SAVE BUTTON CLICK
+    document.getElementById("save-button").addEventListener("click", () => {
+        let mealValues = [];
+        let optionValues = new Set(
+            Array.from(datalist.options).map(opt => opt.value)
+        );
+
+        inputs.forEach(input => {
+            let meal = input.value.trim();
+            mealValues.push(meal);
+
+            // Add to dropdown if new
+            if (meal !== "" && !optionValues.has(meal)) {
+                optionValues.add(meal);
+                let option = document.createElement("option");
+                option.value = meal;
+                datalist.appendChild(option);
+            }
+        });
+
+        // Save meals
+        localStorage.setItem("mealGrid", JSON.stringify(mealValues));
+
+        // Save dropdown options
+        localStorage.setItem("mealOptions", JSON.stringify(Array.from(optionValues)));
+
+        alert("Meals saved!");
+    });
+});
+</script>
+
 </body>
 </html>
-
-
 
 {% endblock %}
