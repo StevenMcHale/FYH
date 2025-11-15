@@ -81,6 +81,26 @@
   #save-button:hover {
     background: #5a9eff;
   }
+
+  @media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    .planner {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    input {
+        border: 1px solid #000;
+        background: white;
+        color: black;
+    }
+    #save-button {
+        display: none; /* hide the save button in print */
+    }
+}
+
 </style>
 
 </head>
@@ -141,19 +161,20 @@
 <button id="save-button">Save Meals</button>
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function () {
     const inputs = document.querySelectorAll("input[list='meal-options']");
     const datalist = document.getElementById("meal-options");
 
+    // Load saved grid
     if (localStorage.getItem("mealGrid")) {
         const savedMeals = JSON.parse(localStorage.getItem("mealGrid"));
         inputs.forEach((input, index) => {
-            if (savedMeals[index]) {
-                input.value = savedMeals[index];
-            }
+            if (savedMeals[index]) input.value = savedMeals[index];
         });
     }
 
+    // Load saved meal options
     if (localStorage.getItem("mealOptions")) {
         const savedOptions = JSON.parse(localStorage.getItem("mealOptions"));
         savedOptions.forEach(meal => {
@@ -165,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Save button click
     document.getElementById("save-button").addEventListener("click", () => {
         let mealValues = [];
         let optionValues = new Set(Array.from(datalist.options).map(opt => opt.value));
@@ -173,6 +195,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let meal = input.value.trim();
             mealValues.push(meal);
 
+            // Add new meals to dropdown
             if (meal !== "" && !optionValues.has(meal)) {
                 optionValues.add(meal);
                 let option = document.createElement("option");
@@ -181,12 +204,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
+        // Save to localStorage
         localStorage.setItem("mealGrid", JSON.stringify(mealValues));
         localStorage.setItem("mealOptions", JSON.stringify(Array.from(optionValues)));
+
         alert("Meals saved!");
+
+        // Ask if user wants to print/save as PDF
+        if (confirm("Do you want to print or save your meal planner as a PDF?")) {
+            window.print();
+        }
     });
 });
 </script>
+
 
 </body>
 </html>
