@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,13 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-znf5fdg658#jjwyz!k7)(%1hr+am_5q1aj#l^3p(6s4f(%kf*f'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-znf5fdg658#jjwyz!k7)(%1hr+am_5q1aj#l^3p(6s4f(%kf*f')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-import os
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*.vercel.app', 'localhost', '127.0.0.1', '*']
+# Allow Vercel host plus localhost by default; in production set ALLOWED_HOSTS explicitly
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*.vercel.app,localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -76,17 +77,32 @@ WSGI_APPLICATION = 'uni_planner.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.labihsrujpchbcvtszao',
-        'PASSWORD': 'kcl12345',
-        'HOST': 'aws-1-eu-north-1.pooler.supabase.com',
-        'PORT': '5432',
-        'CONN_MAX_AGE': 0,
+DATABASE_URL = os.getenv('DATABASE_URL')
+if DATABASE_URL:
+    try:
+        import dj_database_url
+
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600),
+        }
+    except Exception:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.getenv('PGNAME', 'postgres'),
+                'USER': os.getenv('PGUSER', ''),
+                'PASSWORD': os.getenv('PGPASSWORD', ''),
+                'HOST': os.getenv('PGHOST', ''),
+                'PORT': os.getenv('PGPORT', '5432'),
+            }
+        }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
