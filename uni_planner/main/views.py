@@ -6,3 +6,11 @@ from django.http import HttpResponse
 def home(request):
     context = {}
     return render(request, 'main/home.html', context)
+
+def chores(request):
+    context = {}
+    return render(request, 'main/chores.html', context)
+
+def meals(request):
+    context = {}
+    return render(request, 'main/meals.html', context)
