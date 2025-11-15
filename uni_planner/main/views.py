@@ -27,7 +27,7 @@ def meals(request):
 def habits(request):
     context = {}
     return render(request, "main/habits.html", context)
-    return render(request, 'main/meals.html', context)
+
 
 
 
