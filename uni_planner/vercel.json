@@ -9,8 +9,18 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "/static/$1",
+      "headers": {
+        "cache-control": "public, max-age=3600, immutable"
+      }
+    },
+    {
       "src": "/(.*)",
       "dest": "uni_planner/wsgi.py"
     }
-  ]
+  ],
+  "env": {
+    "DEBUG": "False"
+  }
 }
