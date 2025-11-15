@@ -112,6 +112,7 @@
     border: 1px solid #5c83b8;
   }
 </style>
+
 <br>
 <h1>Chore Calendar</h1>
 
@@ -156,42 +157,39 @@ function renderCalendar() {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // Set header text
   document.getElementById("month-year").innerText =
       currentDate.toLocaleString('default', { month: 'long' }) + " " + year;
 
-  // Clear old days
   document.querySelectorAll(".day-box").forEach(e => e.remove());
 
-  // Get first day of month
   const firstDay = new Date(year, month, 1).getDay();
-  const offset = (firstDay + 6) % 7; // Convert Sunday→6
+  const offset = (firstDay + 6) % 7;
 
-  // Days in month
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-
   const daysDiv = document.getElementById("days");
 
-  // Add blank spaces before 1st
   for (let i = 0; i < offset; i++) {
     let empty = document.createElement("div");
     empty.className = "day-box";
     daysDiv.appendChild(empty);
   }
 
-  // Add days
   for (let day = 1; day <= daysInMonth; day++) {
     let box = document.createElement("div");
     box.className = "day day-box";
     box.onclick = () => openModal(day);
 
+    let choreText = chores[year]?.[month]?.[day] || "";
     box.innerHTML = `
       <div>${day}</div>
-      <div class="chore-text">${chores[year]?.[month]?.[day] || ""}</div>
+      <div class="chore-text">${choreText}</div>
     `;
 
     daysDiv.appendChild(box);
   }
+
+  // Trigger reminders for today
+  triggerTodaysReminders();
 }
 
 function changeMonth(dir) {
@@ -231,6 +229,29 @@ function saveChore() {
 
   closeModal();
   renderCalendar();
+}
+
+// --- Notifications ---
+function triggerTodaysReminders() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const day = now.getDate();
+
+  const todaysChores = chores[year]?.[month]?.[day];
+  if (!todaysChores) return;
+
+  // Ask for permission if needed
+  if (Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+
+  if (Notification.permission === "granted") {
+    new Notification("Today's Chores", {
+      body: todaysChores,
+      icon: "", // Optional: Add an icon URL
+    });
+  }
 }
 
 renderCalendar();

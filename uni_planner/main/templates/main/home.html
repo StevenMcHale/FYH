@@ -4,14 +4,19 @@
 {% block content %}
 <head>
     <style>
-    body {
-        background-color: #0a2248;
-    }
-</style>
+        body {
+            background-color: #0a2248;
+        }
+
+        .card.card-body {
+            background-color: #1a2f4f; /* Blue matching other pages */
+            color: #e8f0fb; /* Light text for contrast */
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.4);
+            padding: 30px;
+        }
+    </style>
 </head>
-
-
-
 
 <div class="row justify-content-center" style="margin-top: 100px;">
     <div class="col-md-7">
@@ -20,7 +25,7 @@
             <h1>Uni Planner</h1>
             <h3>A space to organise your life...</h3>
 
-            <hr>
+            <hr style="border-color: #315485;">
 
             <h4>By Steven, Vedant, and Diya</h4>
             
