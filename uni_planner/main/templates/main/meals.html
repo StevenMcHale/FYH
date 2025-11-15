@@ -2,6 +2,115 @@
 
 {% block content %}
 
-<h1>Meals</h1>
+
+
+<html>
+<head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+
+  .planner {
+    display: grid;
+    grid-template-columns: 120px repeat(7, 1fr);
+    border: 1px solid #ccc;
+  }
+
+  .planner div {
+    border: 1px solid #ccc;
+    padding: 8px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .meal-label {
+    font-weight: bold;
+    background: #f3f3f3;
+  }
+
+  .day-label {
+    font-weight: bold;
+    background: #e6e6e6;
+  }
+
+  input, select {
+    width: 90%;
+    padding: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+<h1>Meal Planner</h1>
+
+<!-- 🟦 Datalist with meal options -->
+<datalist id="meal-options">
+  <option value="Pancakes">
+  <option value="Omelette">
+  <option value="Cereal">
+  <option value="Salad">
+  <option value="Sandwich">
+  <option value="Chicken & Rice">
+  <option value="Spaghetti">
+  <option value="Stir Fry">
+  <option value="Soup">
+</datalist>
+
+<div class="planner">
+
+  <!-- Empty top-left corner -->
+  <div></div>
+
+  <!-- Days of week -->
+  <div class="day-label">Monday</div>
+  <div class="day-label">Tuesday</div>
+  <div class="day-label">Wednesday</div>
+  <div class="day-label">Thursday</div>
+  <div class="day-label">Friday</div>
+  <div class="day-label">Saturday</div>
+  <div class="day-label">Sunday</div>
+
+  <!-- A reusable input box -->
+  <!-- Use: <input list="meal-options" /> -->
+
+  <!-- Breakfast row -->
+  <div class="meal-label">Breakfast</div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+
+  <!-- Lunch row -->
+  <div class="meal-label">Lunch</div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+
+  <!-- Dinner row -->
+  <div class="meal-label">Dinner</div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+  <div><input list="meal-options"></div>
+
+</div>
+
+</body>
+</html>
+
+
 
 {% endblock %}
