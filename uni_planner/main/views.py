@@ -29,55 +29,51 @@ def habits(request):
     return render(request, "main/habits.html", context)
 
 
-
-
-
-
-
-
-
-
-
-
+def relax(request):
+    context = {}
+    return render(request, "main/relax.html", context)
 
 
 def registerPage(request):
     if request.user.is_authenticated:
-        return redirect('home')
-    
+        return redirect("home")
+
     form = CreateUserForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Account created for {username}! You can now login.')
-            return redirect('login')
+            username = form.cleaned_data.get("username")
+            messages.success(
+                request, f"Account created for {username}! You can now login."
+            )
+            return redirect("login")
 
-    context = {'form': form}
-    return render(request, 'main/register.html', context)
+    context = {"form": form}
+    return render(request, "main/register.html", context)
+
 
 def loginPage(request):
     if request.user.is_authenticated:
-        return redirect('home')
-    
+        return redirect("home")
+
     form = LoginForm()
-    
-    if request.method == 'POST':
+
+    if request.method == "POST":
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')
-    
-    context = {'form': form}
-    return render(request, 'main/login.html', context)
+                return redirect("home")
+
+    context = {"form": form}
+    return render(request, "main/login.html", context)
+
 
 def logoutPage(request):
     logout(request)
-    return redirect('home')
-
+    return redirect("home")
