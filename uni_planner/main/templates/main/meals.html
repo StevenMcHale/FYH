@@ -2,59 +2,92 @@
 
 {% block content %}
 
-
-
-
-
 <html>
 <head>
 <style>
   body {
     font-family: Arial, sans-serif;
-    padding: 20px;
+    background: #0b1e39;        /* deep navy */
+    color: #e8f0fb;             /* soft white-blue */
+  }
+
+  h1 {
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 25px;
   }
 
   .planner {
     display: grid;
     grid-template-columns: 120px repeat(7, 1fr);
-    border: 1px solid #ccc;
+    border: 2px solid #1f3b66;
+    background: #1a2f4f;        /* dark slate blue */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 25px rgba(0,0,0,0.45);
   }
 
   .planner div {
-    border: 1px solid #ccc;
-    padding: 8px;
+    border: 1px solid #2c4a7a;  /* subtle border */
+    padding: 12px;
     box-sizing: border-box;
     text-align: center;
+    color: #e8f0fb;
   }
 
   .meal-label {
     font-weight: bold;
-    background: #f3f3f3;
+    background: #2f5fa5;        /* strong mid-blue */
+    color: white;
   }
 
   .day-label {
     font-weight: bold;
-    background: #e6e6e6;
+    background: #2f5fa5;        /* lighter, vibrant blue */
+    color: white;
   }
 
   input, select {
     width: 90%;
-    padding: 5px;
+    padding: 7px;
     font-size: 14px;
-    box-sizing: border-box;
+    border-radius: 6px;
+    border: 1px solid #5c83b8;
+    background: #eef4ff;        /* very light blue */
+    color: #0b1e39;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #3c7dd9;
+    box-shadow: 0 0 6px rgba(60,125,217,0.6);
   }
 
   #save-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    margin-top: 30px;
+    padding: 12px 26px;
+    font-size: 17px;
+    border: none;
+    border-radius: 8px;
+    background: #2f5fa5;
+    color: white;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: 0.25s;
+  }
+
+  #save-button:hover {
+    background: #5a9eff;
   }
 </style>
+
 </head>
 <body>
+    <br>
 <h1>Meal Planner</h1>
 
-<!-- 🟦 Datalist with meal options -->
 <datalist id="meal-options">
   <option value="Pancakes">
   <option value="Omelette">
@@ -68,11 +101,7 @@
 </datalist>
 
 <div class="planner">
-
-  <!-- Empty top-left corner -->
   <div></div>
-
-  <!-- Days of week -->
   <div class="day-label">Monday</div>
   <div class="day-label">Tuesday</div>
   <div class="day-label">Wednesday</div>
@@ -81,7 +110,6 @@
   <div class="day-label">Saturday</div>
   <div class="day-label">Sunday</div>
 
-  <!-- Breakfast row -->
   <div class="meal-label">Breakfast</div>
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
@@ -91,7 +119,6 @@
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
 
-  <!-- Lunch row -->
   <div class="meal-label">Lunch</div>
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
@@ -101,7 +128,6 @@
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
 
-  <!-- Dinner row -->
   <div class="meal-label">Dinner</div>
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
@@ -110,19 +136,15 @@
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
   <div><input list="meal-options"></div>
-
 </div>
 
-<!-- SAVE BUTTON -->
 <button id="save-button">Save Meals</button>
 
-<!-- JAVASCRIPT BELOW -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const inputs = document.querySelectorAll("input[list='meal-options']");
     const datalist = document.getElementById("meal-options");
 
-    // Load saved inputs
     if (localStorage.getItem("mealGrid")) {
         const savedMeals = JSON.parse(localStorage.getItem("mealGrid"));
         inputs.forEach((input, index) => {
@@ -132,7 +154,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Load saved meal options
     if (localStorage.getItem("mealOptions")) {
         const savedOptions = JSON.parse(localStorage.getItem("mealOptions"));
         savedOptions.forEach(meal => {
@@ -144,18 +165,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // SAVE BUTTON CLICK
     document.getElementById("save-button").addEventListener("click", () => {
         let mealValues = [];
-        let optionValues = new Set(
-            Array.from(datalist.options).map(opt => opt.value)
-        );
+        let optionValues = new Set(Array.from(datalist.options).map(opt => opt.value));
 
         inputs.forEach(input => {
             let meal = input.value.trim();
             mealValues.push(meal);
 
-            // Add to dropdown if new
             if (meal !== "" && !optionValues.has(meal)) {
                 optionValues.add(meal);
                 let option = document.createElement("option");
@@ -164,12 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-        // Save meals
         localStorage.setItem("mealGrid", JSON.stringify(mealValues));
-
-        // Save dropdown options
         localStorage.setItem("mealOptions", JSON.stringify(Array.from(optionValues)));
-
         alert("Meals saved!");
     });
 });
